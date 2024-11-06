@@ -1,6 +1,7 @@
 package frc.robot;
-import frc.subsystems.ElevatorSubsystem;
+import frc.subsystems.ElevatorSubsystem.ElevatorSubsystem.;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 public class OI {
 
@@ -9,7 +10,13 @@ public class OI {
 
     public OI() {
         initControllers();
-        elevatorupdown(getDriveLeftY());
+        Elevator.setDefaultCommand(
+            new RunCommand(
+                () ->
+                    //(UNCOMMENT FOR TANKDRIVE) m_drivetrain.tankDrive(
+                    m_drivetrain.arcadeDrive( //(COMMENT FOR TANKDRIVE)
+                        getDriveLeftY(), getDriveLeftX()),
+                m_drivetrain));
     }
 
     /**

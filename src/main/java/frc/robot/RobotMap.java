@@ -30,6 +30,6 @@ public static final class MotorPorts{
     public static final int ELEVATOR_ENCODER = 7;
 
 
-    //PIDGON?
+    //PIDGEON?
     public static final int PIGEON = 18;
 }

@@ -1,5 +1,5 @@
 package frc.robot;
-
+import frc.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class OI {
@@ -9,7 +9,7 @@ public class OI {
 
     public OI() {
         initControllers();
-
+        elevatorupdown(getDriveLeftY());
     }
 
     /**
@@ -31,7 +31,7 @@ public class OI {
     //Y-axis: 4 and 5
     //----------
     //Drive controler axis value grabers
-    private double getDriveLeftY() {
+    public double getDriveLeftY() {
         return driveController.getRawAxis(1);
         
     }

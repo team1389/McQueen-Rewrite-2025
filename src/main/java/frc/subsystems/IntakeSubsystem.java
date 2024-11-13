@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
     @Override
-    public void periodic() {
+    public void periodic() { // figure out how analogpotentiometer works, why >
         isNoteIn = intakeDistanceSensor.get() > (IntakeConstants.kDistanceWithoutNode + 5);
     }
 }

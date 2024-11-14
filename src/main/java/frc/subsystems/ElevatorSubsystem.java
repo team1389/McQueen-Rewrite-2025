@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ElevatorSubsystem extends SubsystemBase {
     //Inititalizing CAN Sparks and giving them names
     private CANSparkMax motion;
-    Object Elevator;
     public void elevator(){
     
         //intitalizing CAN sparks to motors

@@ -13,7 +13,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.motion = new CANSparkMax(frc.robot.MotorPorts.ELEVATOR_MOTOR, MotorType.kBrushed);
         //--------
         //Setting Current limits to not damage motors
-        motion.setSmartCurrentLimit(60);
+        motion.setSmartCurrentLimit(40);
     }
 
     public void elevatorupdown(double speed){

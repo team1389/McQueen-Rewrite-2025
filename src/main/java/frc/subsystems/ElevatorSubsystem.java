@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ElevatorSubsystem extends SubsystemBase {
     //Inititalizing CAN Sparks and giving them names
     private CANSparkMax motion;
-    Object Elevator;
     public void elevator(){
     
         //intitalizing CAN sparks to motors
@@ -15,7 +14,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         this.motion = new CANSparkMax(RobotMap.MotorPorts.ELEVATOR_MOTOR, MotorType.kBrushed);
         //--------
         //Setting Current limits to not damage motors
-        motion.setSmartCurrentLimit(60);
+        motion.setSmartCurrentLimit(40);
     }
 
     public void elevatorupdown(double speed){

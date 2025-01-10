@@ -1,7 +1,11 @@
 package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.command.ElevatorUpDown;
+import frc.command.runShoot;
 import frc.subsystems.*;
+
 
 public class OI {
 
@@ -14,17 +18,15 @@ public class OI {
     private void initControllers() {
         driveController = new XboxController(0);
         manipController = new XboxController(1);
-
-        manipAButton = new JoystickButton(manipController,1);
     }
 
     public OI() {
         initControllers();
-        
-        public final ShooterSubsystem shooterSub = new ShooterSubsystem();
-        public final ElevatorSubsystem elevator = new ElevatorSubsystem();
+        JoystickButton manipAButton = new JoystickButton(manipController,1);
+        final ShooterSubsystem shooterSub = new ShooterSubsystem();
+        final ElevatorSubsystem elevator = new ElevatorSubsystem();
         manipAButton.whileTrue(new runShoot(shooterSub));
-        elevatorSubsystem.setDefaultCommand(new ElevatorUpDown(elevatorSubsystem, () -> -getManipRightY()));
+        elevator.setDefaultCommand(new ElevatorUpDown(elevator, () -> -getManipRightY()));
     }
 
     //gets the stick values
@@ -41,14 +43,14 @@ public class OI {
         return driveController.getRawAxis(1);
         
     }
-    private double getDriveLeftX() {
+    public double getDriveLeftX() {
         return driveController.getRawAxis(0);
         
     }
-    private double getDriveRightY(){
+    public double getDriveRightY(){
         return driveController.getRawAxis(4);
     }
-    private double getDriveRightX(){
+    public double getDriveRightX(){
         return driveController.getRawAxis(3);
     }
     //Minip Control axis valu grabbers
@@ -57,14 +59,14 @@ public class OI {
         return driveController.getRawAxis(1);
         
     }
-    private double getManipLeftX() {
+    public double getManipLeftX() {
         return driveController.getRawAxis(0);
         
     }
-    private double getManipRightY(){
+    public double getManipRightY(){
         return driveController.getRawAxis(4);
     }
-    private double getManipRightX(){
+    public double getManipRightX(){
         return driveController.getRawAxis(3);
     }
 

@@ -11,10 +11,6 @@ import edu.wpi.first.math.util.Units;
  * define Hardware Ports in here
  */
 public class RobotMap {
-
-
-}
-
 public static final class IntakeConstants {
     public static final double kDistanceWithoutNode = 46.7;
 }
@@ -78,3 +74,7 @@ public static final class MotorPorts{
     //PIDGEON?
     public static final int PIGEON = 18;
 }
+
+}
+
+

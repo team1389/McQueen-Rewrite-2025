@@ -18,6 +18,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void elevatorupdown(double speed){
         this.motion.set(speed);
     }
+
+    public void elevatorStop(){
+        this.motion.set(0);
+
+    }
     // Perodic func
     @Override
     public void periodic(){

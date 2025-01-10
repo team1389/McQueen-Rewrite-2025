@@ -18,7 +18,7 @@ public class runShoot extends Command {
     }
 
     @Override
-    public void end() {
+    public void end(boolean interupted) {
         shooter.stop();
     }
 }

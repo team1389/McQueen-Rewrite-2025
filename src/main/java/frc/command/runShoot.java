@@ -8,14 +8,16 @@ import frc.subsystems.ShooterSubsystem;
 public class runShoot extends Command {
     ShooterSubsystem shooter;
 
-    public RunShoot(ShooterSubsystem shooter) {
+    public runShoot(ShooterSubsystem shooter) {
         this.shooter = shooter;
     }
 
+    @Override
     public void execute() {
         shooter.shootTuah();
     }
 
+    @Override
     public void end() {
         shooter.stop();
     }

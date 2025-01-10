@@ -8,11 +8,6 @@ public class OI {
 
     public XboxController driveController, manipController;
 
-    public OI() {
-        initControllers();
-        elevatorupdown(getManipLeftX());
-    }
-
     /**
      * Initialize JoystickButtons and Controllers
      */
@@ -20,6 +15,15 @@ public class OI {
         driveController = new XboxController(0);
         manipController = new XboxController(1);
 
+        manipAButton = new JoystickButton(manipController,1);
+    }
+
+    public OI() {
+        initControllers();
+        elevatorupdown(getManipLeftX());
+        public final ShooterSubsystem shooterSub = new ShooterSubsystem();
+
+        manipAButton.whileTrue(new runShoot(shooterSub));
     }
 
     //gets the stick values

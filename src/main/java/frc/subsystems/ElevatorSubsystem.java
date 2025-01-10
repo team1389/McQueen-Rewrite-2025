@@ -7,10 +7,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     //Inititalizing CAN Sparks and giving them names
     private CANSparkMax motion;
     public void elevator(){
-    
-        //intitalizing CAN sparks to motors
         //-------
-        //Left Side Drive
+        //motor
         this.motion = new CANSparkMax(RobotMap.MotorPorts.ELEVATOR_MOTOR, MotorType.kBrushed);
         //--------
         //Setting Current limits to not damage motors

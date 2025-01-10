@@ -1,7 +1,7 @@
 package frc.robot;
-import frc.subsystems.ElevatorSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.subsystems.*;
 
 public class OI {
 
@@ -20,10 +20,11 @@ public class OI {
 
     public OI() {
         initControllers();
-        elevatorupdown(getManipLeftX());
+        
         public final ShooterSubsystem shooterSub = new ShooterSubsystem();
-
+        public final ElevatorSubsystem elevator = new ElevatorSubsystem();
         manipAButton.whileTrue(new runShoot(shooterSub));
+        elevatorSubsystem.setDefaultCommand(new ElevatorUpDown(elevatorSubsystem, () -> -getManipRightY()));
     }
 
     //gets the stick values

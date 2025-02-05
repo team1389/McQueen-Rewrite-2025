@@ -21,7 +21,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void elevatorStop(){
         this.motion.set(0);
-
     }
     // Perodic func
     @Override

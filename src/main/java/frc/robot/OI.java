@@ -2,8 +2,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.command.ElevatorUpDown;
-import frc.command.runShoot;
 import frc.subsystems.*;
 
 
@@ -22,12 +20,8 @@ public class OI {
 
     public OI() {
         initControllers();
-        JoystickButton manipAButton = new JoystickButton(manipController,1);
-        final ShooterSubsystem shooterSub = new ShooterSubsystem();
-        final ElevatorSubsystem elevator = new ElevatorSubsystem();
-        manipAButton.whileTrue(new runShoot(shooterSub));
-        elevator.setDefaultCommand(new ElevatorUpDown(elevator, () -> -getManipRightY()));
-    }
+        
+   }
 
     //gets the stick values
     //----------

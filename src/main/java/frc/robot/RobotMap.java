@@ -16,7 +16,7 @@ public class RobotMap {
         public static final double ROBOT_WIDTH = 0.498475;//19 5/8 in
         // Distance between front and back wheels (meters)
         public static final double ROBOT_LENGTH = 0.4953; //19.5 in
-
+        public static final double MAX_SPEED =  Units.feetToMeters(14.5);
         // Note positive x is forward
         // Wheel order: FR, FL, BR, BL
         public static final SwerveDriveKinematics driveKinematics = new SwerveDriveKinematics(
@@ -97,7 +97,18 @@ public class RobotMap {
         public static final double kLimelightHeight = 24.5; //Vertical distance in inches from center of robot to center of limelight 
         public static final double kSpeakerAprilTagHeight = 53.88; //Vertical distance in inches from floor to the central april tags on the speaker
     }
-
+    public static class OperatorConstants
+    {
+      public static final int kDriverControllerPort = 0;
+      public static final int kOperatorControllerPort = 1;
+      // Joystick Deadband
+      //tbd
+      public static final double DEADBAND = 0.5;
+      public static final double LEFT_X_DEADBAND  = 0.1;
+      public static final double LEFT_Y_DEADBAND  = 0.1;
+      public static final double RIGHT_X_DEADBAND = 0.1;
+      public static final double TURN_CONSTANT    = 6;
+    }
     public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds

@@ -1,68 +1,189 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.subsystems.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+// import frc.command.ManualElevator;
+// import frc.command.exhaleCommand;
+import frc.robot.RobotMap.OperatorConstants;
+// import frc.subsystems.ClimberSubsystem;
+// import frc.subsystems.ElevatorSubsystem;
+import frc.subsystems.SwerveSubsystem;
 
-public class OI {
+import java.io.File;
+import swervelib.SwerveInputStream;
 
+/**
+ * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
+ * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
+ * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
+ */
+public class OI
+{
 
-    public XboxController driveController, manipController;
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  final         CommandXboxController driveController = new CommandXboxController(0);
+  final        CommandXboxController operatorController = new CommandXboxController(1);
+  // The robot's subsystems and commands are defined here...
+  // private final ClimberSubsystem      climber    = new ClimberSubsystem();
+  // private final ElevatorSubsystem elevator = new ElevatorSubsystem();
+  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+                                                                                "swerve"));
+                                                                                
+                                                                              
+  /**
+   * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
+   */
+  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                () -> driveController.getLeftY() * -1,
+                                                                () -> driveController.getLeftX() * -1)
+                                                                //possible change to getRightY if issue persists
+                                                            .withControllerRotationAxis(driveController::getRightX)
+                                                            .deadband(OperatorConstants.DEADBAND)
+                                                            .scaleTranslation(0.8)
+                                                            .allianceRelativeControl(true);
 
-    /**
-     * Initialize JoystickButtons and Controllers
-     */
-    private void initControllers() {
-        driveController = new XboxController(0);
-        manipController = new XboxController(1);
+  /**
+   * Clone's the angular velocity input stream and converts it to a fieldRelative input stream.
+   */
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driveController::getRightX,
+                                                                                             driveController::getRightY)
+                                                           .headingWhile(true);
+
+  /**
+   * Clone's the angular velocity input stream and converts it to a robotRelative input stream.
+   */
+  SwerveInputStream driveRobotOriented = driveAngularVelocity.copy().robotRelative(true)
+                                                             .allianceRelativeControl(false);
+
+  SwerveInputStream driveAngularVelocityKeyboard = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                        () -> -driveController.getLeftY(),
+                                                                        () -> -driveController.getLeftX())
+                                                                    .withControllerRotationAxis(() -> driveController.getRawAxis(
+                                                                        2))
+                                                                    .deadband(OperatorConstants.DEADBAND)
+                                                                    .scaleTranslation(0.8)
+                                                                    .allianceRelativeControl(true);
+  // Derive the heading axis with math!
+  SwerveInputStream driveDirectAngleKeyboard     = driveAngularVelocityKeyboard.copy()
+                                                                               .withControllerHeadingAxis(() ->
+                                                                                                              Math.sin(
+                                                                                                                  driveController.getRawAxis(
+                                                                                                                      2) *
+                                                                                                                  Math.PI) *
+                                                                                                              (Math.PI *
+                                                                                                               2),
+                                                                                                          () ->
+                                                                                                              Math.cos(
+                                                                                                                  driveController.getRawAxis(
+                                                                                                                      2) *
+                                                                                                                  Math.PI) *
+                                                                                                              (Math.PI *
+                                                                                                               2))
+                                                                               .headingWhile(true);
+
+  /**
+   * The container for the robot. Contains subsystems, OI devices, and commands.
+   */
+  public OI()
+  {
+    // Configure the trigger bindings
+    configureBindings();
+    DriverStation.silenceJoystickConnectionWarning(true);
+  }
+
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
+   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
+   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
+   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
+   */
+  private void configureBindings()
+  {
+    //RESERVE DRIVE B FOR AUTO ALIGN
+    Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle, () -> driveController.b().getAsBoolean());
+    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity, () -> driveController.b().getAsBoolean());
+    Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented, () -> driveController.b().getAsBoolean());
+    Command driveFieldOrientedDirectAngleKeyboard      = drivebase.driveFieldOriented(driveDirectAngleKeyboard, () -> driveController.b().getAsBoolean());
+    Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard, () -> driveController.b().getAsBoolean());
+
+    if (RobotBase.isSimulation())
+    {
+      drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
+    } else
+    {
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     }
 
-    public OI() {
-        initControllers();
-        
-   }
+    if (Robot.isSimulation())
+    {
+      driveController.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+      driveController.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
 
-    //gets the stick values
-    //----------
-    //—Left stick--
-    //X-axis: 0
-    //Y-axis: 1 and 2
-    //—Right stick--
-    //X-axis: 3
-    //Y-axis: 4 and 5
-    //----------
-    //Drive controler axis value grabers
-    public double getDriveLeftY() {
-        return driveController.getRawAxis(1);
-        
     }
-    public double getDriveLeftX() {
-        return driveController.getRawAxis(0);
-        
-    }
-    public double getDriveRightY(){
-        return driveController.getRawAxis(4);
-    }
-    public double getDriveRightX(){
-        return driveController.getRawAxis(3);
-    }
-    //Minip Control axis valu grabbers
+    if (DriverStation.isTest())
+    {
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-    public double getManipLeftY() {
-        return driveController.getRawAxis(1);
-        
-    }
-    public double getManipLeftX() {
-        return driveController.getRawAxis(0);
-        
-    }
-    public double getManipRightY(){
-        return driveController.getRawAxis(4);
-    }
-    public double getManipRightX(){
-        return driveController.getRawAxis(3);
-    }
+      driveController.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driveController.y().whileTrue(drivebase.driveToDistanceCommand(1.0, 0.2));
+      driveController.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driveController.back().whileTrue(drivebase.centerModulesCommand());
+      driveController.leftBumper().onTrue(Commands.none());
+      driveController.rightBumper().onTrue(Commands.none());
+    } else
+    {
+      //EDIT YOUR COMMANDS HERE_______________________________________________________________________________________________________________________________
+      //dont use driver B for aything else, its already used for auto align
+      driveController.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driveController.start().whileTrue(Commands.none());
+      driveController.back().whileTrue(Commands.none());
+      driveController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      driveController.rightBumper().onTrue(Commands.none());
+      // operatorController.pov(0).whileTrue(Commands.run(climber::spinForwards, climber));
+      // operatorController.pov(180).whileTrue(Commands.run(climber::spinBackwards, climber));
+ 
+      // elevator.setDefaultCommand(new ManualElevator(
+      //   elevator,
+      //   () -> getManipLeftY(),
+      //   () -> getManipRightY(),
+      //   () -> getManipRightTrigger(),
+      //   () -> getManipLeftTrigger()
+      // )
+      // );
 
 
+    }
+
+  }
+
+  public double getManipLeftY(){
+    return operatorController.getRawAxis(1);
+  }
+  public double getManipRightY(){
+    return operatorController.getRawAxis(3);
+  }
+  public boolean getManipRightTrigger(){
+    return operatorController.rightTrigger().getAsBoolean();
+  }
+  public boolean getManipLeftTrigger(){
+    return operatorController.leftTrigger().getAsBoolean();
+  }
+
+  public void setMotorBrake(boolean brake)
+  {
+    drivebase.setMotorBrake(brake);
+  }
 }

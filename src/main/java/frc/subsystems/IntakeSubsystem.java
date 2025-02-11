@@ -23,7 +23,7 @@ public class IntakeSubsystem extends SubsystemBase{
         // SmartDashboard.putBoolean("Note in Intake", false);
         intakeMotor = new SparkFlex(RobotMap.MotorPorts.INTAKE_MOTOR, MotorType.kBrushless);
         // intakeMotor.setSmartCurrentLimit(40);
-        
+
         //The type of distance sensor we have in the intake, a 2m rev IR Distance Sensor, must be declared as an analog potentiometer
         intakeDistanceSensor = new AnalogPotentiometer(0, 100, 30); 
         // SmartDashboard.putNumber("Intake Distance Sensor", intakeDistanceSensor.get());

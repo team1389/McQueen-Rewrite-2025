@@ -10,13 +10,19 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.command.ShootCmd;
 // import frc.command.ManualElevator;
 // import frc.command.exhaleCommand;
 import frc.robot.RobotMap.OperatorConstants;
+import frc.subsystems.IndexerSubsystem;
+import frc.subsystems.IntakeSubsystem;
+import frc.subsystems.ShooterSubsystem;
 // import frc.subsystems.ClimberSubsystem;
 // import frc.subsystems.ElevatorSubsystem;
 import frc.subsystems.SwerveSubsystem;
@@ -33,8 +39,12 @@ public class OI
 {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  final         CommandXboxController driveController = new CommandXboxController(0);
-  final        CommandXboxController operatorController = new CommandXboxController(1);
+  final CommandXboxController driveController = new CommandXboxController(0);;
+  final CommandXboxController operatorController = new CommandXboxController(1);;
+  IndexerSubsystem indexSub = new IndexerSubsystem();
+  IntakeSubsystem intakeSub = new IntakeSubsystem();
+  ShooterSubsystem shootSub = new ShooterSubsystem();
+
   // The robot's subsystems and commands are defined here...
   // private final ClimberSubsystem      climber    = new ClimberSubsystem();
   // private final ElevatorSubsystem elevator = new ElevatorSubsystem();
@@ -101,6 +111,7 @@ public class OI
     // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+
   }
 
   /**
@@ -152,10 +163,7 @@ public class OI
       driveController.back().whileTrue(Commands.none());
       driveController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driveController.rightBumper().onTrue(Commands.none());
-
-
-
-
+      operatorController.a().whileTrue(new ShootCmd(intakeSub, indexSub, shootSub));
     }
 
   }

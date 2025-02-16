@@ -16,7 +16,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.command.ShootCmd;
+import frc.command.AmpCmd;
+import frc.command.IntakeCmd;
+import frc.command.Outtake;
+import frc.command.newShootCmd;
 // import frc.command.ManualElevator;
 // import frc.command.exhaleCommand;
 import frc.robot.RobotMap.OperatorConstants;
@@ -163,7 +166,13 @@ public class OI
       driveController.back().whileTrue(Commands.none());
       driveController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driveController.rightBumper().onTrue(Commands.none());
-      operatorController.a().whileTrue(new ShootCmd(intakeSub, indexSub, shootSub));
+      
+      operatorController.a().whileTrue(new newShootCmd(intakeSub, indexSub, shootSub));
+      operatorController.rightBumper().onTrue(new AmpCmd(intakeSub, indexSub));
+      operatorController.leftTrigger().onTrue(new IntakeCmd(intakeSub));
+      operatorController.rightTrigger().whileTrue(new Outtake(intakeSub));
+      //ellipsis button - moveshooter, menu button - moveshooter down, find out what those buttons are
+      
     }
 
   }

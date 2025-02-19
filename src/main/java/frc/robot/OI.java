@@ -20,7 +20,9 @@ import frc.command.AmpCmd;
 import frc.command.IntakeCmd;
 import frc.command.MoveShooterCmd;
 import frc.command.MoveShooterDownCmd;
+import frc.command.MoveToShootCmd;
 import frc.command.Outtake;
+import frc.command.RunIntakeCmd;
 import frc.command.newShootCmd;
 // import frc.command.ManualElevator;
 // import frc.command.exhaleCommand;
@@ -62,8 +64,8 @@ public class OI
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> driveController.getLeftY() * -1,
-                                                                () -> driveController.getLeftX() * -1)
-                                                                //possible change to getRightY if issue persists
+                                                                () -> driveController.getRightY() * -1)
+                                                                //possible change to getLeftY if issue persists
                                                             .withControllerRotationAxis(driveController::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
@@ -169,13 +171,21 @@ public class OI
       driveController.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driveController.rightBumper().onTrue(Commands.none());
       
-      operatorController.a().whileTrue(new newShootCmd(intakeSub, indexSub, shootSub));
-      operatorController.rightBumper().onTrue(new AmpCmd(intakeSub, indexSub));
-      operatorController.leftTrigger().onTrue(new IntakeCmd(intakeSub));
+      /*
+      operatorController.a().whileTrue(new newShootCmd(shootSub));
+      operatorController.rightBumper().whileTrue(new AmpCmd(intakeSub, indexSub));
+      operatorController.y().whileTrue(new RunIntakeCmd(intakeSub));
       operatorController.rightTrigger().whileTrue(new Outtake(intakeSub));
       //ellipsis button - moveshooter, menu button - moveshooter down
-      operatorController.back().whileTrue(new MoveShooterCmd(shootSub));
-      operatorController.start().whileTrue(new MoveShooterDownCmd(shootSub));
+      operatorController.x().whileTrue(new MoveShooterCmd(shootSub));
+      operatorController.b().whileTrue(new MoveShooterDownCmd(shootSub));
+      operatorController.leftBumper().whileTrue(new MoveToShootCmd(indexSub));
+       */
+      operatorController.y().whileTrue(new MoveShooterCmd(shootSub));
+      operatorController.a().whileTrue(new MoveShooterDownCmd(shootSub));
+      operatorController.x().whileTrue(new newShootCmd(shootSub));
+      operatorController.b().whileTrue(new IntakeCmd(intakeSub, indexSub));
+
     }
 
   }

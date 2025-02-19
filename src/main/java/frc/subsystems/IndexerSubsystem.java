@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
 public class IndexerSubsystem extends SubsystemBase{
-    double indexerMotorSpeed = .3; //.2
+    double indexerMotorSpeed = 1; //.2
     private SparkFlex indexerMotor;
 
     public IndexerSubsystem(){

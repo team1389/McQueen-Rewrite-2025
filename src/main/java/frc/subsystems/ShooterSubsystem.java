@@ -165,8 +165,8 @@ public class ShooterSubsystem extends SubsystemBase{
         shootTopController.set(shootSpeed);
     }
     
-    public void runWristUp(){
-        wristController.set(wristSpeed);
+    public void runWrist(double speed){
+        wristController.set(speed);
     }
 
     public boolean isAtTargetRPM(double setpoint){
@@ -174,10 +174,6 @@ public class ShooterSubsystem extends SubsystemBase{
          return getTopSpeedRPM() > (setpoint - 100); //TODO change back to 100
          // return (Math.abs(getTopSpeedRPM()-setpoint)<1000);//&&((getBottomSpeedRPM()-setpoint)<100);
     }
-
-    public void runWristDown(){
-        wristController.set(-.05);
-    } 
 
     public void stopWrist(){
         wristController.set(0);

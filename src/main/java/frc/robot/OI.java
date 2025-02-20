@@ -17,9 +17,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.command.AmpCmd;
+import frc.command.ElevatorCmd;
 import frc.command.IntakeCmd;
-import frc.command.MoveShooterCmd;
-import frc.command.MoveShooterDownCmd;
+import frc.command.WristCmd;
 import frc.command.MoveToShootCmd;
 import frc.command.Outtake;
 import frc.command.RunIntakeCmd;
@@ -27,6 +27,7 @@ import frc.command.newShootCmd;
 // import frc.command.ManualElevator;
 // import frc.command.exhaleCommand;
 import frc.robot.RobotMap.OperatorConstants;
+import frc.subsystems.ElevatorSubsystem;
 import frc.subsystems.IndexerSubsystem;
 import frc.subsystems.IntakeSubsystem;
 import frc.subsystems.ShooterSubsystem;
@@ -51,6 +52,7 @@ public class OI
   IndexerSubsystem indexSub = new IndexerSubsystem();
   IntakeSubsystem intakeSub = new IntakeSubsystem();
   ShooterSubsystem shootSub = new ShooterSubsystem();
+  ElevatorSubsystem elevatorSub = new ElevatorSubsystem();
 
   // The robot's subsystems and commands are defined here...
   // private final ClimberSubsystem      climber    = new ClimberSubsystem();
@@ -64,8 +66,8 @@ public class OI
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> driveController.getLeftY() * -1,
-                                                                () -> driveController.getRightY() * -1)
-                                                                //possible change to getLeftY if issue persists
+                                                                () -> driveController.getLeftX() * -1)
+                                                                //possible change to getRightY if issue persists
                                                             .withControllerRotationAxis(driveController::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
@@ -181,10 +183,19 @@ public class OI
       operatorController.b().whileTrue(new MoveShooterDownCmd(shootSub));
       operatorController.leftBumper().whileTrue(new MoveToShootCmd(indexSub));
        */
-      operatorController.y().whileTrue(new MoveShooterCmd(shootSub));
-      operatorController.a().whileTrue(new MoveShooterDownCmd(shootSub));
+      //operatorController.y().whileTrue(new MoveShooterCmd(shootSub));
+      //operatorController.a().whileTrue(new MoveShooterDownCmd(shootSub));
       operatorController.x().whileTrue(new newShootCmd(shootSub));
       operatorController.b().whileTrue(new IntakeCmd(intakeSub, indexSub));
+      //operatorController.leftBumper().whileTrue(new ElevatorUpCmd(elevatorSub, 1));
+      //operatorController.rightBumper().whileTrue(new ElevatorUpCmd(elevatorSub, -1));
+      elevatorSub.setDefaultCommand(new ElevatorCmd(elevatorSub, () -> operatorController.getRightY()));
+      
+      // Elevator Up & Down = Left Operator Joystick
+      // Wrist Up & Down = Right Operator Joystick
+      //Shooter Up Down (Wrist control) = Y (Up) A (Down)
+      //Intake and move to shooter = B
+      //Shoot (rev shooter motors) = X
 
     }
 

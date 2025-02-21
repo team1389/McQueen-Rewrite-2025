@@ -183,29 +183,31 @@ public class OI
       operatorController.b().whileTrue(new MoveShooterDownCmd(shootSub));
       operatorController.leftBumper().whileTrue(new MoveToShootCmd(indexSub));
        */
-      //operatorController.y().whileTrue(new MoveShooterCmd(shootSub));
-      //operatorController.a().whileTrue(new MoveShooterDownCmd(shootSub));
-      operatorController.x().whileTrue(new newShootCmd(shootSub));
+      // operatorController.y().whileTrue(new WristCmd(shootSub,.1));
+      // operatorController.a().whileTrue(new WristCmd(shootSub,-.1));
+      shootSub.setDefaultCommand(new WristCmd(shootSub, () -> getManipLeftY()));
+      operatorController.y().whileTrue(new newShootCmd(shootSub));
       operatorController.b().whileTrue(new IntakeCmd(intakeSub, indexSub));
-      //operatorController.leftBumper().whileTrue(new ElevatorUpCmd(elevatorSub, 1));
-      //operatorController.rightBumper().whileTrue(new ElevatorUpCmd(elevatorSub, -1));
-      elevatorSub.setDefaultCommand(new ElevatorCmd(elevatorSub, () -> operatorController.getRightY()));
+      // operatorController.leftBumper().whileTrue(new ElevatorCmd(elevatorSub, .2));
+      // operatorController.rightBumper().whileTrue(new ElevatorCmd(elevatorSub, -.2));
+      elevatorSub.setDefaultCommand(new ElevatorCmd(elevatorSub, () -> getManipRightY()));
       
-      // Elevator Up & Down = Left Operator Joystick
-      // Wrist Up & Down = Right Operator Joystick
-      //Shooter Up Down (Wrist control) = Y (Up) A (Down)
+      
+      // Elevator Up & Down = Right Operator Joystick
+      // Wrist Up & Down = Left Operator Joystick
       //Intake and move to shooter = B
-      //Shoot (rev shooter motors) = X
+      //Shoot (rev shooter motors) = Y
+      //Amp = A
 
     }
-
+    
   }
 
   public double getManipLeftY(){
     return operatorController.getRawAxis(1);
   }
   public double getManipRightY(){
-    return operatorController.getRawAxis(3);
+    return operatorController.getRawAxis(4);
   }
   public boolean getManipRightTrigger(){
     return operatorController.rightTrigger().getAsBoolean();

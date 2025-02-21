@@ -4,13 +4,13 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkFlex;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.command.ElevatorCmd;
 import frc.robot.RobotMap;
+import frc.robot.OI;
 
 public class ElevatorSubsystem extends SubsystemBase{
     // double elevatorSpeed = 1; //.2
     private SparkFlex elevatorMotor;
-
     public ElevatorSubsystem(){
         elevatorMotor = new SparkFlex(16, MotorType.kBrushless);
         // indexerMotor.setSmartCurrentLimit(40);
@@ -28,5 +28,6 @@ public class ElevatorSubsystem extends SubsystemBase{
     public void stop(){
         elevatorMotor.set(0);
     }
+
 
 }

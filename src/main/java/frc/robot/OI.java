@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.command.AmpCmd;
+import frc.command.AmpShootCmd;
 import frc.command.ElevatorCmd;
 import frc.command.IntakeCmd;
 import frc.command.WristCmd;
@@ -188,6 +189,7 @@ public class OI
       shootSub.setDefaultCommand(new WristCmd(shootSub, () -> getManipLeftY()));
       operatorController.y().whileTrue(new newShootCmd(shootSub));
       operatorController.b().whileTrue(new IntakeCmd(intakeSub, indexSub));
+      operatorController.a().whileTrue(new AmpCmd(intakeSub, indexSub));
       // operatorController.leftBumper().whileTrue(new ElevatorCmd(elevatorSub, .2));
       // operatorController.rightBumper().whileTrue(new ElevatorCmd(elevatorSub, -.2));
       elevatorSub.setDefaultCommand(new ElevatorCmd(elevatorSub, () -> getManipRightY()));

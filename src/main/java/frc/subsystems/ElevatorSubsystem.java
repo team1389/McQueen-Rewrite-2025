@@ -4,9 +4,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkFlex;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.command.ElevatorCmd;
-import frc.robot.RobotMap;
-import frc.robot.OI;
 
 public class ElevatorSubsystem extends SubsystemBase{
     // double elevatorSpeed = 1; //.2
